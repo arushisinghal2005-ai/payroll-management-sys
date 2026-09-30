@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register &mdash; Attendance Payroll</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eae6d8;
+  --surface:#f8f6ee;
+  --surface-raised:#ffffff;
+  --ink:#232823;
+  --ink-soft:#5c6459;
+  --ink-faint:#8b9187;
+  --accent:#0e5b4a;
+  --accent-ink:#f4f3e9;
+  --accent-soft:#dce8e2;
+  --gold:#b3812f;
+  --gold-soft:#f1e6cc;
+  --danger:#a23b2e;
+  --danger-soft:#f2ded9;
+  --line:#d6d0bd;
+  --line-strong:#b9b29b;
+  --row-alt:#f0ede2;
+  --focus:#1c7a63;
+  --shadow: 0 1px 0 rgba(35,40,35,0.06);
+  --radius:3px;
+}
+:root:not([data-theme="light"]) {}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) {
+    --bg:#181b17;
+    --surface:#20241f;
+    --surface-raised:#262a24;
+    --ink:#e9e7db;
+    --ink-soft:#b1b6a8;
+    --ink-faint:#7d8377;
+    --accent:#5cbfa0;
+    --accent-ink:#0e1712;
+    --accent-soft:#233b32;
+    --gold:#d9ac5a;
+    --gold-soft:#3a3120;
+    --danger:#e3897a;
+    --danger-soft:#3a2622;
+    --line:#3a3f36;
+    --line-strong:#4c5245;
+    --row-alt:#1e221c;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#181b17;
+  --surface:#20241f;
+  --surface-raised:#262a24;
+  --ink:#e9e7db;
+  --ink-soft:#b1b6a8;
+  --ink-faint:#7d8377;
+  --accent:#5cbfa0;
+  --accent-ink:#0e1712;
+  --accent-soft:#233b32;
+  --gold:#d9ac5a;
+  --gold-soft:#3a3120;
+  --danger:#e3897a;
+  --danger-soft:#3a2622;
+  --line:#3a3f36;
+  --line-strong:#4c5245;
+  --row-alt:#1e221c;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'IBM Plex Sans', -apple-system, sans-serif;
+  font-size:14px;
+  line-height:1.5;
+  min-height:100vh;
+}
+h1,h2,h3,h4{font-family:'Fraunces', Georgia, serif; margin:0; font-weight:600; letter-spacing:-0.01em;}
+.num{font-family:'IBM Plex Mono', monospace; font-variant-numeric:tabular-nums;}
+a{color:inherit;}
+button{font-family:inherit; cursor:pointer;}
+input,select,textarea{font-family:inherit; font-size:14px; color:var(--ink); background:var(--surface-raised); border:1px solid var(--line-strong); border-radius:var(--radius); padding:7px 9px;}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--focus); outline-offset:1px;}
+input[type="checkbox"]{width:auto; padding:0;}
+::-webkit-scrollbar{height:10px; width:10px;}
+::-webkit-scrollbar-thumb{background:var(--line-strong); border-radius:6px;}
+
+.app{display:flex; min-height:100vh;}
+
+/* ---- Sidebar ---- */
+.sidebar{
+  width:216px; flex:none; background:var(--surface); border-right:1px solid var(--line);
+  display:flex; flex-direction:column; padding:20px 0;
+  position:sticky; top:0; height:100vh; overflow-y:auto;
+}
+.brand{padding:0 20px 18px 20px; border-bottom:1px solid var(--line); margin-bottom:10px;}
+.brand-mark{font-size:22px; margin-bottom:6px; display:block;}
+.brand h1{font-size:17px; line-height:1.2;}
+.brand .sub{color:var(--ink-soft); font-size:11.5px; margin-top:2px;}
+.nav{display:flex; flex-direction:column; padding:6px 10px; gap:2px;}
+.nav button{
+  text-align:left; background:none; border:none; padding:9px 12px; border-radius:var(--radius);
+  color:var(--ink-soft); font-size:13.5px; display:flex; align-items:center; gap:10px;
+}
+.nav button .ic{width:16px; text-align:center; font-size:14px;}
+.nav button:hover{background:var(--row-alt); color:var(--ink);}
+.nav button.active{background:var(--accent); color:var(--accent-ink); font-weight:500;}
+.sidebar-foot{margin-top:auto; padding:14px 20px 0 20px; border-top:1px solid var(--line); font-size:11px; color:var(--ink-faint);}
+
+/* ---- Main ---- */
+.main{flex:1; min-width:0; padding:28px 34px 60px 34px;}
+.topline{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:22px; flex-wrap:wrap; gap:10px;}
+.topline h2{font-size:22px;}
+.topline .desc{color:var(--ink-soft); font-size:12.5px; margin-top:3px;}
+
+.panel{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px; margin-bottom:18px;}
+.panel-title{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; gap:10px; flex-wrap:wrap;}
+.panel-title h3{font-size:15px;}
+.hint{color:var(--ink-faint); font-size:11.5px;}
+
+.btn{
+  background:var(--surface-raised); border:1px solid var(--line-strong); color:var(--ink);
+  padding:8px 14px; border-radius:var(--radius); font-size:13px; font-weight:500;
+  display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+}
+.btn:hover{border-color:var(--ink-soft);}
+.btn-primary{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+.btn-primary:hover{filter:brightness(1.06);}
+.btn-danger{background:var(--surface-raised); border-color:var(--danger); color:var(--danger);}
+.btn-danger:hover{background:var(--danger-soft);}
+.btn-ghost{background:none; border-color:transparent; padding:7px 8px;}
+.btn-ghost:hover{background:var(--row-alt);}
+.btn-sm{padding:5px 10px; font-size:12px;}
+.btn[disabled]{opacity:0.45; cursor:not-allowed;}
+
+.row-flex{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+label.field{display:flex; flex-direction:column; gap:4px; font-size:12px; color:var(--ink-soft);}
+label.field input, label.field select, label.field textarea{color:var(--ink);}
+.form-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:12px;}
+
+table{width:100%; border-collapse:collapse; font-size:13px;}
+th{
+  text-align:left; font-family:'IBM Plex Sans'; font-weight:600; color:var(--ink-soft);
+  border-bottom:1px solid var(--line-strong); padding:7px 10px; font-size:11.5px;
+  white-space:nowrap;
+}
+td{padding:8px 10px; border-bottom:1px solid var(--line); white-space:nowrap;}
+tbody tr:nth-child(even){background:var(--row-alt);}
+tbody tr:hover{background:var(--accent-soft);}
+.table-scroll{overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius);}
+.table-scroll table{border:none;}
+.table-scroll th:first-child, .table-scroll td:first-child{position:sticky; left:0; background:inherit;}
+td.num,th.num{text-align:right; font-family:'IBM Plex Mono', monospace;}
+
+.badge{display:inline-block; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:500;}
+.badge-active{background:var(--accent-soft); color:var(--accent);}
+.badge-inactive{background:var(--danger-soft); color:var(--danger);}
+.badge-gold{background:var(--gold-soft); color:var(--gold);}
+
+.stat-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:14px; margin-bottom:20px;}
+.stat-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px;}
+.stat-card .label{font-size:11.5px; color:var(--ink-soft); margin-bottom:6px;}
+.stat-card .value{font-family:'IBM Plex Mono',monospace; font-size:23px; font-weight:600;}
+.stat-card .sub{font-size:11px; color:var(--ink-faint); margin-top:4px;}
+
+.empty{padding:34px 20px; text-align:center; color:var(--ink-faint); font-size:13px;}
+.empty .big{font-size:26px; display:block; margin-bottom:8px;}
+
+/* Modal */
+.modal-back{position:fixed; inset:0; background:rgba(20,22,18,0.42); display:flex; align-items:flex-start; justify-content:center; padding:44px 16px; z-index:50; overflow-y:auto;}
+.modal{background:var(--surface-raised); border:1px solid var(--line); border-radius:6px; width:100%; max-width:560px; padding:22px 24px; box-shadow:0 10px 30px rgba(0,0,0,0.18);}
+.modal.wide{max-width:760px;}
+.modal-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;}
+.modal-head h3{font-size:17px;}
+.close-x{background:none; border:none; font-size:18px; color:var(--ink-soft); padding:4px 8px;}
+.modal-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:18px; border-top:1px solid var(--line); padding-top:14px;}
+
+/* Attendance calendar */
+.att-toolbar{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px;}
+.status-pick{padding:7px 12px; border-radius:20px; border:1.5px solid var(--line-strong); background:var(--surface-raised); font-size:12.5px; font-weight:500; display:flex; align-items:center; gap:6px;}
+.status-pick.active{border-color:var(--accent); background:var(--accent-soft); color:var(--accent);}
+.dot{width:9px; height:9px; border-radius:50%; display:inline-block;}
+.cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; user-select:none;}
+.cal-dow{text-align:center; font-size:10.5px; color:var(--ink-faint); padding-bottom:2px;}
+.cal-cell{
+  aspect-ratio:1/1; border:1px solid var(--line); border-radius:4px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; font-size:12.5px; background:var(--surface-raised); position:relative; min-height:44px;
+}
+.cal-cell.pad{border:none; background:none;}
+.cal-cell .d{font-size:10px; color:var(--ink-faint); position:absolute; top:3px; left:5px;}
+.cal-cell .s{font-weight:600; font-size:13px; margin-top:4px;}
+.cal-cell[data-status="P"]{background:var(--accent-soft); border-color:var(--accent);}
+.cal-cell[data-status="A"]{background:var(--danger-soft); border-color:var(--danger);}
+.cal-cell[data-status="HD"]{background:var(--gold-soft); border-color:var(--gold);}
+.cal-cell[data-status="L"]{background:#ded9ec; border-color:#7a6bb0;}
+.cal-cell[data-status="H"]{background:#d8e6ee; border-color:#3f7ea8;}
+:root[data-theme="dark"] .cal-cell[data-status="L"], @media (prefers-color-scheme:dark){ .cal-cell[data-status="L"]{background:#2c2740;} }
+.legend{display:flex; gap:14px; flex-wrap:wrap; margin-top:12px; font-size:11.5px; color:var(--ink-soft);}
+.legend span{display:flex; align-items:center; gap:5px;}
+
+/* tabs (inline sub-tabs) */
+.subtabs{display:flex; gap:4px; margin-bottom:16px; border-bottom:1px solid var(--line);}
+.subtabs button{background:none; border:none; padding:9px 4px; margin-right:18px; color:var(--ink-soft); font-size:13.5px; border-bottom:2px solid transparent; position:relative; top:1px;}
+.subtabs button.active{color:var(--ink); border-bottom-color:var(--accent); font-weight:500;}
+
+.net-pos{color:var(--accent); font-weight:600;}
+.net-neg{color:var(--danger); font-weight:600;}
+.mono-small{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft);}
+
+.searchbar{display:flex; align-items:center; gap:8px; background:var(--surface-raised); border:1px solid var(--line-strong); border-radius:20px; padding:6px 12px; max-width:280px;}
+.searchbar input{border:none; padding:2px; flex:1; background:none;}
+.searchbar input:focus{outline:none;}
+
+.pill-select{display:flex; gap:6px; flex-wrap:wrap;}
+.pill-select button{border-radius:20px; border:1px solid var(--line-strong); background:var(--surface-raised); padding:6px 13px; font-size:12.5px; color:var(--ink-soft);}
+.pill-select button.active{background:var(--accent); border-color:var(--accent); color:var(--accent-ink); font-weight:500;}
+
+.locked-tag{font-size:10.5px; background:var(--gold-soft); color:var(--gold); padding:2px 8px; border-radius:20px; font-weight:600;}
+.draft-tag{font-size:10.5px; background:var(--accent-soft); color:var(--accent); padding:2px 8px; border-radius:20px; font-weight:600;}
+
+@media print{
+  .sidebar,.no-print{display:none !important;}
+  .main{padding:0;}
+  body{background:#fff;}
+  .panel{border:none;}
+}
+
+@media (max-width:880px){
+  .app{flex-direction:column;}
+  .sidebar{position:relative; width:100%; height:auto; flex-direction:row; overflow-x:auto; padding:12px 8px; align-items:center;}
+  .brand{border:none; padding:0 10px; margin:0; flex:none;}
+  .brand .sub{display:none;}
+  .nav{flex-direction:row; padding:0;}
+  .sidebar-foot{display:none;}
+  .main{padding:18px 16px 50px 16px;}
+  .form-grid{grid-template-columns:1fr 1fr;}
+  .cal-cell{min-height:38px;}
+}
+@media (max-width:520px){
+  .form-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <nav class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">📒</span>
+      <h1 id="companyNameDisplay">Register</h1>
+      <div class="sub">Attendance payroll ledger</div>
+    </div>
+    <div class="nav" id="navList">
+      <button data-tab="dashboard" class="active"><span class="ic">◆</span>Dashboard</button>
+      <button data-tab="workers"><span class="ic">☰</span>Workers</button>
+      <button data-tab="attendance"><span class="ic">▦</span>Attendance</button>
+      <button data-tab="advances"><span class="ic">↻</span>Advances</button>
+      <button data-tab="earnings"><span class="ic">+</span>Bonus &amp; Deductions</button>
+      <button data-tab="payroll"><span class="ic">₹</span>Payroll</button>
+      <button data-tab="settings"><span class="ic">⚙</span>Settings</button>
+    </div>
+    <div class="sidebar-foot">Data is stored privately in this browser only.</div>
+  </nav>
+
+  <main class="main" id="main"></main>
+</div>
+
+<div id="modalRoot"></div>
+
+<script>
+/* =========================================================================
+   STATE + STORAGE
+========================================================================= */
+const STORE_KEY = 'attendancePayrollApp_v1';
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const STATUS_LABEL = {P:'Present', A:'Absent', HD:'Half Day', L:'Leave', H:'Holiday'};
+const STATUS_ORDER = ['P','A','HD','L','H'];
+
+function uid(prefix){ return prefix+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+
+function defaultState(){
+  return {
+    settings:{
+      companyName:'Register',
+      currency:'₹',
+      halfDayValue:0.5,
+      holidayPaid:false,
+      leavePaid:false,
+      theme:'auto'
+    },
+    workers:[],
+    attendance:{},      // key `${workerId}__${monthKey}` -> {days:{1:'P',...}, otHours:0}
+    advances:[],        // {id, workerId, date, amount, reason, repaymentMethod, plannedMonthly, remarks, recoveries:[{id,month,amount,date}]}
+    bonuses:[],         // {id, workerId, month, amount, type, reason, remarks}
+    otherDeductions:[], // {id, workerId, month, amount, type, reason, remarks}
+    payrollRecords:[],  // {id, workerId, month, dailyRate, otRate, counts:{P,A,HD,L,H}, otHours, presentPay, halfDayPay, holidayPay, leavePay, otPay, bonus, gross, advanceDeduction, otherDeduction, totalDeductions, net, processedAt}
+  };
+}
+
+let state = null;
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      state = Object.assign(defaultState(), parsed);
+      state.settings = Object.assign(defaultState().settings, parsed.settings||{});
+    } else {
+      state = defaultState();
+    }
+  }catch(e){
+    console.error('Failed to load state, starting fresh.', e);
+    state = defaultState();
+  }
+}
+
+function saveState(){
+  try{
+    localStorage.setItem(STORE_KEY, JSON.stringify(state));
+  }catch(e){
+    console.error('Storage error while saving.', e);
+    alert('Could not save changes to this browser\'s storage. Your last action may not persist.');
+  }
+}
+
+/* =========================================================================
+   HELPERS
+========================================================================= */
+function fmtMoney(n){
+  n = Math.round((Number(n)||0)*100)/100;
+  const neg = n < 0;
+  n = Math.abs(n);
+  const s = n.toLocaleString('en-IN', {minimumFractionDigits:0, maximumFractionDigits:2});
+  return (neg?'-':'') + state.settings.currency + s;
+}
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+function currentMonthKey(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); }
+function monthLabel(mk){ const [y,m]=mk.split('-').map(Number); return MONTHS[m-1]+' '+y; }
+function daysInMonth(mk){ const [y,m]=mk.split('-').map(Number); return new Date(y,m,0).getDate(); }
+function worker(id){ return state.workers.find(w=>w.id===id); }
+function activeWorkers(){ return state.workers.filter(w=>w.active!==false); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function attKey(workerId, monthKey){ return workerId+'__'+monthKey; }
+function getAttendance(workerId, monthKey){
+  const k = attKey(workerId, monthKey);
+  if(!state.attendance[k]) state.attendance[k] = {days:{}, otHours:0};
+  return state.attendance[k];
+}
+function attendanceCounts(workerId, monthKey){
+  const att = state.attendance[attKey(workerId, monthKey)];
+  const counts = {P:0,A:0,HD:0,L:0,H:0};
+  if(att){
+    Object.values(att.days).forEach(s=>{ if(counts[s]!==undefined) counts[s]++; });
+  }
+  return counts;
+}
+
+function outstandingForAdvance(adv){
+  const recovered = (adv.recoveries||[]).reduce((s,r)=>s+Number(r.amount||0),0);
+  return Math.round((Number(adv.amount||0) - recovered)*100)/100;
+}
+function outstandingForWorker(workerId){
+  return state.advances.filter(a=>a.workerId===workerId).reduce((s,a)=>s+outstandingForAdvance(a),0);
+}
+function totalAdvanceTaken(workerId){
+  return state.advances.filter(a=>a.workerId===workerId).reduce((s,a)=>s+Number(a.amount||0),0);
+}
+function totalAdvanceRecovered(workerId){
+  return totalAdvanceTaken(workerId) - outstandingForWorker(workerId);
+}
+
+function bonusTotal(workerId, monthKey){
+  return state.bonuses.filter(b=>b.workerId===workerId && b.month===monthKey).reduce((s,b)=>s+Number(b.amount||0),0);
+}
+function otherDeductionTotal(workerId, monthKey){
+  return state.otherDeductions.filter(d=>d.workerId===workerId && d.month===monthKey).reduce((s,d)=>s+Number(d.amount||0),0);
+}
+function existingPayrollRecord(workerId, monthKey){
+  return state.payrollRecords.find(r=>r.workerId===workerId && r.month===monthKey);
+}
+
+// Suggested advance deduction for a worker this month, based on planned monthly amounts of open advances (FIFO), capped at outstanding.
+function suggestedAdvanceDeduction(workerId){
+  const advs = state.advances.filter(a=>a.workerId===workerId).sort((a,b)=>a.date.localeCompare(b.date));
+  let total = 0;
+  advs.forEach(a=>{
+    const out = outstandingForAdvance(a);
+    if(out>0){ total += Math.min(out, Number(a.plannedMonthly||0)); }
+  });
+  return Math.round(total*100)/100;
+}
+
+// Core payroll computation (live, pre-processing) for a worker & month.
+function computePayroll(workerId, monthKey, advanceDeductionOverride){
+  const w = worker(workerId);
+  const locked = existingPayrollRecord(workerId, monthKey);
+  const counts = attendanceCounts(workerId, monthKey);
+  const att = state.attendance[attKey(workerId, monthKey)];
+  const otHours = locked ? locked.otHours : (att ? Number(att.otHours||0) : 0);
+  const dailyRate = locked ? locked.dailyRate : Number(w.dailyRate||0);
+  const otRate = locked ? locked.otRate : Number(w.otRate||0);
+  const halfDayValue = state.settings.halfDayValue;
+
+  const c = locked ? locked.counts : counts;
+  const presentPay = c.P * dailyRate;
+  const halfDayPay = c.HD * halfDayValue * dailyRate;
+  const holidayPay = state.settings.holidayPaid ? c.H * dailyRate : 0;
+  const leavePay = state.settings.leavePaid ? c.L * dailyRate : 0;
+  const otPay = otHours * otRate;
+  const bonus = locked ? locked.bonus : bonusTotal(workerId, monthKey);
+  const gross = presentPay + halfDayPay + holidayPay + leavePay + otPay + bonus;
+  const otherDeduction = locked ? locked.otherDeduction : otherDeductionTotal(workerId, monthKey);
+
+  let advanceDeduction;
+  if(locked){
+    advanceDeduction = locked.advanceDeduction;
+  } else if(advanceDeductionOverride !== undefined){
+    advanceDeduction = Math.min(Number(advanceDeductionOverride||0), outstandingForWorker(workerId));
+  } else {
+    advanceDeduction = Math.min(suggestedAdvanceDeduction(workerId), outstandingForWorker(workerId));
+  }
+  const totalDeductions = advanceDeduction + otherDeduction;
+  const net = gross - totalDeductions;
+
+  return {
+    workerId, month:monthKey, locked: !!locked,
+    dailyRate, otRate, counts:c, otHours,
+    presentPay, halfDayPay, holidayPay, leavePay, otPay, bonus, gross,
+    advanceDeduction, otherDeduction, totalDeductions, net,
+    paidDays: c.P + c.HD*halfDayValue + (state.settings.holidayPaid?c.H:0) + (state.settings.leavePaid?c.L:0)
+  };
+}
+
+function processPayroll(workerId, monthKey, advanceDeductionAmount){
+  if(existingPayrollRecord(workerId, monthKey)){ return; }
+  const calc = computePayroll(workerId, monthKey, advanceDeductionAmount);
+  const record = Object.assign({id:uid('pay'), processedAt:new Date().toISOString()}, calc);
+  state.payrollRecords.push(record);
+
+  // distribute advance deduction FIFO across this worker's open advances
+  let remaining = calc.advanceDeduction;
+  const advs = state.advances.filter(a=>a.workerId===workerId).sort((a,b)=>a.date.localeCompare(b.date));
+  for(const a of advs){
+    if(remaining<=0) break;
+    const out = outstandingForAdvance(a);
+    if(out<=0) continue;
+    const take = Math.min(out, remaining);
+    if(take>0){
+      a.recoveries = a.recoveries||[];
+      a.recoveries.push({id:uid('rec'), month:monthKey, amount:take, date:todayISO()});
+      remaining -= take;
+    }
+  }
+  saveState();
+}
+
+function unprocessPayroll(recordId){
+  const idx = state.payrollRecords.findIndex(r=>r.id===recordId);
+  if(idx===-1) return;
+  const rec = state.payrollRecords[idx];
+  // remove associated recovery entries for this worker+month
+  state.advances.filter(a=>a.workerId===rec.workerId).forEach(a=>{
+    a.recoveries = (a.recoveries||[]).filter(r=>r.month!==rec.month);
+  });
+  state.payrollRecords.splice(idx,1);
+  saveState();
+}
+
+/* =========================================================================
+   APP SHELL / ROUTING
+========================================================================= */
+let currentTab = 'dashboard';
+let uiState = {
+  attendance:{ workerId:null, month: currentMonthKey(), status:'P', dept:'' },
+  payroll:{ month: currentMonthKey() },
+  earnings:{ subtab:'bonus', month: currentMonthKey() },
+  advances:{ workerId:'' },
+  workers:{ search:'' }
+};
+
+function setTab(tab){
+  currentTab = tab;
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+  render();
+}
+
+function render(){
+  const main = document.getElementById('main');
+  document.getElementById('companyNameDisplay').textContent = state.settings.companyName || 'Register';
+  const renderers = {
+    dashboard: renderDashboard,
+    workers: renderWorkers,
+    attendance: renderAttendance,
+    advances: renderAdvances,
+    earnings: renderEarnings,
+    payroll: renderPayroll,
+    settings: renderSettings
+  };
+  main.innerHTML = (renderers[currentTab]||renderDashboard)();
+  attachTabEvents();
+}
+
+function closeModal(){ document.getElementById('modalRoot').innerHTML=''; }
+function openModal(html){ document.getElementById('modalRoot').innerHTML = html; }
+
+/* =========================================================================
+   DASHBOARD
+========================================================================= */
+function renderDashboard(){
+  const mk = currentMonthKey();
+  const totalWorkers = state.workers.length;
+  const active = activeWorkers().length;
+  const totalOutstanding = state.workers.reduce((s,w)=>s+outstandingForWorker(w.id),0);
+  let grossThisMonth = 0, netThisMonth = 0, processedCount = 0;
+  activeWorkers().forEach(w=>{
+    const c = computePayroll(w.id, mk);
+    grossThisMonth += c.gross; netThisMonth += c.net;
+    if(existingPayrollRecord(w.id,mk)) processedCount++;
+  });
+
+  const recentAdvances = [...state.advances].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+
+  return `
+    <div class="topline">
+      <div><h2>Dashboard</h2><div class="desc">${esc(monthLabel(mk))} snapshot</div></div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="label">Active workers</div><div class="value">${active}</div><div class="sub">${totalWorkers} total on record</div></div>
+      <div class="stat-card"><div class="label">Estimated gross &mdash; this month</div><div class="value">${fmtMoney(grossThisMonth)}</div><div class="sub">Based on attendance entered so far</div></div>
+      <div class="stat-card"><div class="label">Estimated net payable</div><div class="value">${fmtMoney(netThisMonth)}</div><div class="sub">After advances &amp; deductions</div></div>
+      <div class="stat-card"><div class="label">Advance outstanding</div><div class="value">${fmtMoney(totalOutstanding)}</div><div class="sub">Across all workers</div></div>
+      <div class="stat-card"><div class="label">Payroll processed</div><div class="value">${processedCount} / ${active}</div><div class="sub">Workers locked for ${esc(monthLabel(mk))}</div></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title"><h3>Quick actions</h3></div>
+      <div class="row-flex">
+        <button class="btn btn-primary" onclick="setTab('workers'); openWorkerModal();">+ Add worker</button>
+        <button class="btn" onclick="setTab('attendance')">Mark attendance</button>
+        <button class="btn" onclick="setTab('advances'); openAdvanceModal();">Record an advance</button>
+        <button class="btn" onclick="setTab('payroll')">Run this month's payroll</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title"><h3>Recent advances</h3><span class="hint">Last 5 entries</span></div>
+      ${recentAdvances.length===0 ? `<div class="empty"><span class="big">↻</span>No advances recorded yet.</div>` : `
+      <div class="table-scroll"><table>
+        <thead><tr><th>Date</th><th>Worker</th><th class="num">Amount</th><th class="num">Outstanding</th><th>Reason</th></tr></thead>
+        <tbody>
+          ${recentAdvances.map(a=>{
+            const w = worker(a.workerId);
+            return `<tr><td>${esc(a.date)}</td><td>${esc(w?w.fullName:'—')}</td><td class="num">${fmtMoney(a.amount)}</td><td class="num">${fmtMoney(outstandingForAdvance(a))}</td><td>${esc(a.reason||'')}</td></tr>`;
+          }).join('')}
+        </tbody>
+      </table></div>`}
+    </div>
+  `;
+}
+
+/* =========================================================================
+   WORKERS
+========================================================================= */
+function renderWorkers(){
+  const q = uiState.workers.search.trim().toLowerCase();
+  const list = state.workers.filter(w=> !q || (w.fullName||'').toLowerCase().includes(q) || (w.department||'').toLowerCase().includes(q) || (w.id||'').toLowerCase().includes(q));
+
+  return `
+    <div class="topline">
+      <div><h2>Workers</h2><div class="desc">Enter each worker once &mdash; rates carry forward automatically</div></div>
+      <button class="btn btn-primary" onclick="openWorkerModal()">+ Add worker</button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">
+        <div class="searchbar">🔎<input id="workerSearch" placeholder="Search by name, ID or department" value="${esc(uiState.workers.search)}"></div>
+        <span class="hint">${list.length} of ${state.workers.length} workers</span>
+      </div>
+      ${list.length===0 ? `<div class="empty"><span class="big">☰</span>No workers found. Add your first worker to get started.</div>` : `
+      <div class="table-scroll"><table>
+        <thead><tr>
+          <th>ID</th><th>Name</th><th>Department</th><th>Designation</th>
+          <th class="num">Daily rate</th><th class="num">OT rate/hr</th>
+          <th class="num">Outstanding advance</th><th>Status</th><th></th>
+        </tr></thead>
+        <tbody>
+          ${list.map(w=>`
+            <tr>
+              <td class="mono-small">${esc(w.id)}</td>
+              <td>${esc(w.fullName)}</td>
+              <td>${esc(w.department||'—')}</td>
+              <td>${esc(w.designation||'—')}</td>
+              <td class="num">${fmtMoney(w.dailyRate)}</td>
+              <td class="num">${fmtMoney(w.otRate)}</td>
+              <td class="num">${fmtMoney(outstandingForWorker(w.id))}</td>
+              <td><span class="badge ${w.active!==false?'badge-active':'badge-inactive'}">${w.active!==false?'Active':'Inactive'}</span></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="openWorkerModal('${w.id}')">Edit</button></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table></div>`}
+    </div>
+  `;
+}
+
+function openWorkerModal(id){
+  const w = id ? worker(id) : null;
+  const isNew = !w;
+  const d = w || {id:'', fullName:'', guardianName:'', mobile:'', address:'', joiningDate:todayISO(), department:'', designation:'', active:true,
+    dailyRate:'', otRate:'', paymentMethod:'Bank', bankAccount:'', ifsc:'', upiId:'', paymentRemarks:''};
+  const suggestedId = isNew ? ('W'+String(state.workers.length+1).padStart(3,'0')) : d.id;
+
+  openModal(`
+    <div class="modal-back" onclick="if(event.target===this) closeModal()">
+      <div class="modal wide">
+        <div class="modal-head">
+          <h3>${isNew?'Add worker':'Edit worker &mdash; '+esc(d.fullName)}</h3>
+          <button class="close-x" onclick="closeModal()">✕</button>
+        </div>
+        <form id="workerForm">
+          <h4 style="font-size:13px; color:var(--ink-soft); margin-bottom:10px; font-family:'IBM Plex Sans'; text-transform:none;">Personal information</h4>
+          <div class="form-grid" style="margin-bottom:16px;">
+            <label class="field">Worker ID<input name="id" value="${esc(suggestedId)}" ${isNew?'':'readonly'} required></label>
+            <label class="field">Full name<input name="fullName" value="${esc(d.fullName)}" required></label>
+            <label class="field">Father's / Husband's name<input name="guardianName" value="${esc(d.guardianName||'')}"></label>
+            <label class="field">Mobile number<input name="mobile" value="${esc(d.mobile||'')}"></label>
+            <label class="field">Joining date<input type="date" name="joiningDate" value="${esc(d.joiningDate||'')}"></label>
+            <label class="field">Department<input name="department" value="${esc(d.department||'')}" placeholder="e.g. Masonry"></label>
+            <label class="field">Designation / work type<input name="designation" value="${esc(d.designation||'')}" placeholder="e.g. Mason"></label>
+            <label class="field">Status
+              <select name="active"><option value="true" ${d.active!==false?'selected':''}>Active</option><option value="false" ${d.active===false?'selected':''}>Inactive</option></select>
+            </label>
+            <label class="field" style="grid-column:1/-1;">Address<textarea name="address" rows="2">${esc(d.address||'')}</textarea></label>
+          </div>
+
+          <h4 style="font-size:13px; color:var(--ink-soft); margin-bottom:10px; font-family:'IBM Plex Sans';">Payment information</h4>
+          <div class="form-grid" style="margin-bottom:16px;">
+            <label class="field">Daily rate (${esc(state.settings.currency)})<input type="number" step="0.01" min="0" name="dailyRate" value="${esc(d.dailyRate)}" required></label>
+            <label class="field">Overtime rate / hour (${esc(state.settings.currency)})<input type="number" step="0.01" min="0" name="otRate" value="${esc(d.otRate)}" required></label>
+            <label class="field">Payment method
+              <select name="paymentMethod"><option ${d.paymentMethod==='Bank'?'selected':''}>Bank</option><option ${d.paymentMethod==='UPI'?'selected':''}>UPI</option><option ${d.paymentMethod==='Cash'?'selected':''}>Cash</option></select>
+            </label>
+            <label class="field">Bank account number<input name="bankAccount" value="${esc(d.bankAccount||'')}"></label>
+            <label class="field">IFSC code<input name="ifsc" value="${esc(d.ifsc||'')}"></label>
+            <label class="field">UPI ID<input name="upiId" value="${esc(d.upiId||'')}"></label>
+            <label class="field" style="grid-column:1/-1;">Payment remarks<input name="paymentRemarks" value="${esc(d.paymentRemarks||'')}"></label>
+          </div>
+
+          ${!isNew ? `
+          <h4 style="font-size:13px; color:var(--ink-soft); margin-bottom:10px; font-family:'IBM Plex Sans';">Advance summary</h4>
+          <div class="row-flex" style="margin-bottom:6px;">
+            <div class="stat-card" style="flex:1;"><div class="label">Total taken</div><div class="value" style="font-size:16px;">${fmtMoney(totalAdvanceTaken(d.id))}</div></div>
+            <div class="stat-card" style="flex:1;"><div class="label">Recovered</div><div class="value" style="font-size:16px;">${fmtMoney(totalAdvanceRecovered(d.id))}</div></div>
+            <div class="stat-card" style="flex:1;"><div class="label">Outstanding</div><div class="value" style="font-size:16px;">${fmtMoney(outstandingForWorker(d.id))}</div></div>
+          </div>
+          ` : ''}
+
+          <div class="modal-actions">
+            ${!isNew ? `<button type="button" class="btn btn-danger" style="margin-right:auto;" onclick="deleteWorker('${d.id}')">Delete worker</button>` : ''}
+            <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary">${isNew?'Add worker':'Save changes'}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `);
+
+  document.getElementById('workerForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const obj = Object.fromEntries(fd.entries());
+    obj.active = obj.active === 'true';
+    obj.dailyRate = Number(obj.dailyRate||0);
+    obj.otRate = Number(obj.otRate||0);
+    if(isNew){
+      if(state.workers.some(x=>x.id===obj.id)){ alert('A worker with this ID already exists.'); return; }
+      state.workers.push(obj);
+    } else {
+      Object.assign(w, obj, {id:d.id});
+    }
+    saveState(); closeModal(); render();
+  });
+}
+
+function deleteWorker(id){
+  if(!confirm('Delete this worker and all their attendance, advance, bonus and deduction records? This cannot be undone.')) return;
+  state.workers = state.workers.filter(w=>w.id!==id);
+  state.advances = state.advances.filter(a=>a.workerId!==id);
+  state.bonuses = state.bonuses.filter(b=>b.workerId!==id);
+  state.otherDeductions = state.otherDeductions.filter(d=>d.workerId!==id);
+  state.payrollRecords = state.payrollRecords.filter(r=>r.workerId!==id);
+  Object.keys(state.attendance).forEach(k=>{ if(k.startsWith(id+'__')) delete state.attendance[k]; });
+  saveState(); closeModal(); render();
+}
+
+/* =========================================================================
+   ATTENDANCE
+========================================================================= */
+function renderAttendance(){
+  const list = activeWorkers();
+  if(!uiState.attendance.workerId && list.length) uiState.attendance.workerId = list[0].id;
+  const mk = uiState.attendance.month;
+  const w = worker(uiState.attendance.workerId);
+  const dim = daysInMonth(mk);
+  const att = w ? getAttendance(w.id, mk) : null;
+  const locked = w ? !!existingPayrollRecord(w.id, mk) : false;
+  const counts = w ? attendanceCounts(w.id, mk) : {P:0,A:0,HD:0,L:0,H:0};
+  const unmarked = dim - Object.values(counts).reduce((a,b)=>a+b,0);
+
+  const [y,m] = mk.split('-').map(Number);
+  const firstDow = new Date(y, m-1, 1).getDay();
+
+  return `
+    <div class="topline">
+      <div><h2>Attendance</h2><div class="desc">Mark daily status, then enter overtime hours for the month</div></div>
+    </div>
+
+    <div class="panel">
+      <div class="row-flex" style="margin-bottom:4px;">
+        <label class="field">Worker
+          <select id="attWorkerSelect" style="min-width:200px;">
+            ${list.length===0?'<option>No active workers</option>':list.map(x=>`<option value="${esc(x.id)}" ${x.id===uiState.attendance.workerId?'selected':''}>${esc(x.fullName)} — ${esc(x.department||'')}</option>`).join('')}
+          </select>
+        </label>
+        <label class="field">Month<input type="month" id="attMonthSelect" value="${esc(mk)}"></label>
+        ${locked ? `<span class="locked-tag" style="margin-top:18px;">🔒 Payroll processed for this month — attendance is locked</span>` : ''}
+      </div>
+    </div>
+
+    ${!w ? `<div class="panel"><div class="empty"><span class="big">☰</span>Add an active worker first.</div></div>` : `
+    <div class="panel">
+      <div class="panel-title">
+        <h3>${esc(monthLabel(mk))} &mdash; ${esc(w.fullName)}</h3>
+        <span class="hint">${unmarked>0?unmarked+' day(s) not marked yet':'All days marked'}</span>
+      </div>
+
+      <div class="att-toolbar" ${locked?'style="opacity:0.5; pointer-events:none;"':''}>
+        ${STATUS_ORDER.map(s=>`
+          <button type="button" class="status-pick ${uiState.attendance.status===s?'active':''}" data-status="${s}">
+            <span class="dot" style="background:${statusColor(s)}"></span>${s} &middot; ${STATUS_LABEL[s]}
+          </button>`).join('')}
+        <button type="button" class="btn btn-sm" id="markAllPresent">Mark all as Present</button>
+        <button type="button" class="btn btn-sm" id="clearMonth">Clear month</button>
+      </div>
+
+      <div class="cal-grid">
+        ${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="cal-dow">${d}</div>`).join('')}
+        ${Array(firstDow).fill('<div class="cal-cell pad"></div>').join('')}
+        ${Array.from({length:dim}, (_,i)=>{
+          const day = i+1;
+          const s = att.days[day];
+          return `<div class="cal-cell" data-day="${day}" data-status="${s||''}" ${locked?'':'onclick="paintDay('+day+')"'} style="${locked?'':'cursor:pointer;'}">
+            <span class="d">${day}</span><span class="s">${s||''}</span>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <div class="legend">
+        ${STATUS_ORDER.map(s=>`<span><span class="dot" style="background:${statusColor(s)}"></span>${s} = ${STATUS_LABEL[s]} (${counts[s]})</span>`).join('')}
+      </div>
+
+      <div class="row-flex" style="margin-top:18px; border-top:1px solid var(--line); padding-top:16px;">
+        <label class="field">Overtime hours (this month)
+          <input type="number" min="0" step="0.5" id="otHoursInput" value="${att.otHours||0}" ${locked?'disabled':''} style="max-width:140px;">
+        </label>
+        <div class="stat-card" style="min-width:150px;"><div class="label">Present days</div><div class="value" style="font-size:18px;">${counts.P}</div></div>
+        <div class="stat-card" style="min-width:150px;"><div class="label">Half days</div><div class="value" style="font-size:18px;">${counts.HD}</div></div>
+        <div class="stat-card" style="min-width:150px;"><div class="label">Absent</div><div class="value" style="font-size:18px;">${counts.A}</div></div>
+        <div class="stat-card" style="min-width:150px;"><div class="label">Leave</div><div class="value" style="font-size:18px;">${counts.L}</div></div>
+        <div class="stat-card" style="min-width:150px;"><div class="label">Holiday</div><div class="value" style="font-size:18px;">${counts.H}</div></div>
+      </div>
+    </div>
+    `}
+  `;
+}
+function statusColor(s){
+  return {P:'var(--accent)', A:'var(--danger)', HD:'var(--gold)', L:'#7a6bb0', H:'#3f7ea8'}[s];
+}
+function paintDay(day){
+  const w = worker(uiState.attendance.workerId);
+  const mk = uiState.attendance.month;
+  const att = getAttendance(w.id, mk);
+  const status = uiState.attendance.status;
+  if(att.days[day] === status){ delete att.days[day]; } else { att.days[day] = status; }
+  saveState(); render();
+}
+
+/* =========================================================================
+   ADVANCES
+========================================================================= */
+function renderAdvances(){
+  const filterId = uiState.advances.workerId;
+  let list = [...state.advances].sort((a,b)=>b.date.localeCompare(a.date));
+  if(filterId) list = list.filter(a=>a.workerId===filterId);
+
+  return `
+    <div class="topline">
+      <div><h2>Advances</h2><div class="desc">Track salary advances and their monthly recovery</div></div>
+      <button class="btn btn-primary" onclick="openAdvanceModal()">+ Record advance</button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">
+        <label class="field">Filter by worker
+          <select id="advWorkerFilter" style="min-width:200px;">
+            <option value="">All workers</option>
+            ${state.workers.map(w=>`<option value="${esc(w.id)}" ${w.id===filterId?'selected':''}>${esc(w.fullName)}</option>`).join('')}
+          </select>
+        </label>
+      </div>
+      ${list.length===0 ? `<div class="empty"><span class="big">↻</span>No advances recorded.</div>` : `
+      <div class="table-scroll"><table>
+        <thead><tr><th>Date</th><th>Worker</th><th class="num">Amount</th><th class="num">Planned monthly</th><th class="num">Recovered</th><th class="num">Outstanding</th><th>Reason</th><th></th></tr></thead>
+        <tbody>
+          ${list.map(a=>{
+            const w = worker(a.workerId);
+            const out = outstandingForAdvance(a);
+            const recovered = Number(a.amount||0)-out;
+            return `<tr>
+              <td>${esc(a.date)}</td>
+              <td>${esc(w?w.fullName:'—')}</td>
+              <td class="num">${fmtMoney(a.amount)}</td>
+              <td class="num">${fmtMoney(a.plannedMonthly)}</td>
+              <td class="num">${fmtMoney(recovered)}</td>
+              <td class="num">${out>0?fmtMoney(out):'<span class="badge badge-active">Cleared</span>'}</td>
+              <td>${esc(a.reason||'')}</td>
+              <td>
+                <button class="btn btn-ghost btn-sm" onclick="viewAdvanceHistory('${a.id}')">History</button>
+                ${(!a.recoveries||a.recoveries.length===0) ? `<button class="btn btn-ghost btn-sm" onclick="deleteAdvance('${a.id}')">Delete</button>` : ''}
+              </td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table></div>`}
+    </div>
+  `;
+}
+
+function openAdvanceModal(){
+  if(state.workers.length===0){ alert('Add a worker first.'); return; }
+  openModal(`
+    <div class="modal-back" onclick="if(event.target===this) closeModal()">
+      <div class="modal">
+        <div class="modal-head"><h3>Record advance</h3><button class="close-x" onclick="closeModal()">✕</button></div>
+        <form id="advForm">
+          <div class="form-grid">
+            <label class="field">Worker<select name="workerId" required>${state.workers.map(w=>`<option value="${esc(w.id)}">${esc(w.fullName)}</option>`).join('')}</select></label>
+            <label class="field">Date<input type="date" name="date" value="${todayISO()}" required></label>
+            <label class="field">Amount (${esc(state.settings.currency)})<input type="number" min="0" step="0.01" name="amount" required></label>
+            <label class="field">Planned monthly deduction (${esc(state.settings.currency)})<input type="number" min="0" step="0.01" name="plannedMonthly" required></label>
+            <label class="field">Repayment method<select name="repaymentMethod"><option>Salary deduction</option><option>Cash repayment</option><option>Other</option></select></label>
+            <label class="field">Reason<input name="reason" placeholder="e.g. Medical, festival"></label>
+            <label class="field" style="grid-column:1/-1;">Remarks<textarea name="remarks" rows="2"></textarea></label>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save advance</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `);
+  document.getElementById('advForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const obj = Object.fromEntries(new FormData(e.target).entries());
+    obj.id = uid('adv'); obj.amount = Number(obj.amount||0); obj.plannedMonthly = Number(obj.plannedMonthly||0); obj.recoveries = [];
+    state.advances.push(obj);
+    saveState(); closeModal(); render();
+  });
+}
+function deleteAdvance(id){
+  if(!confirm('Delete this advance record?')) return;
+  state.advances = state.advances.filter(a=>a.id!==id);
+  saveState(); closeModal(); render();
+}
+function viewAdvanceHistory(id){
+  const a = state.advances.find(x=>x.id===id);
+  const w = worker(a.workerId);
+  const recs = [...(a.recoveries||[])].sort((x,y)=>x.month.localeCompare(y.month));
+  openModal(`
+    <div class="modal-back" onclick="if(event.target===this) closeModal()">
+      <div class="modal">
+        <div class="modal-head"><h3>Recovery history</h3><button class="close-x" onclick="closeModal()">✕</button></div>
+        <p class="hint">${esc(w.fullName)} &middot; advance of ${fmtMoney(a.amount)} taken on ${esc(a.date)}</p>
+        ${recs.length===0?`<div class="empty">No deductions recorded against this advance yet.</div>`:`
+        <div class="table-scroll"><table><thead><tr><th>Month</th><th class="num">Amount deducted</th></tr></thead>
+        <tbody>${recs.map(r=>`<tr><td>${esc(monthLabel(r.month))}</td><td class="num">${fmtMoney(r.amount)}</td></tr>`).join('')}</tbody></table></div>`}
+        <div class="modal-actions"><button class="btn" onclick="closeModal()">Close</button></div>
+      </div>
+    </div>
+  `);
+}
+
+/* =========================================================================
+   BONUS / INCENTIVES + OTHER DEDUCTIONS
+========================================================================= */
+function renderEarnings(){
+  const sub = uiState.earnings.subtab;
+  const mk = uiState.earnings.month;
+  return `
+    <div class="topline">
+      <div><h2>Bonus &amp; Deductions</h2><div class="desc">Additional earnings and non-advance deductions, applied per worker per month</div></div>
+      <button class="btn btn-primary" onclick="${sub==='bonus'?'openBonusModal()':'openDeductionModal()'}">+ Add ${sub==='bonus'?'earning':'deduction'}</button>
+    </div>
+    <div class="subtabs">
+      <button class="${sub==='bonus'?'active':''}" onclick="uiState.earnings.subtab='bonus'; render();">Bonus &amp; incentives</button>
+      <button class="${sub==='other'?'active':''}" onclick="uiState.earnings.subtab='other'; render();">Other deductions</button>
+    </div>
+    <div class="panel">
+      <div class="panel-title">
+        <label class="field">Month<input type="month" id="earningsMonth" value="${esc(mk)}"></label>
+      </div>
+      ${sub==='bonus' ? renderBonusTable(mk) : renderDeductionTable(mk)}
+    </div>
+  `;
+}
+function renderBonusTable(mk){
+  const list = state.bonuses.filter(b=>b.month===mk).sort((a,b)=>(worker(a.workerId)?.fullName||'').localeCompare(worker(b.workerId)?.fullName||''));
+  if(list.length===0) return `<div class="empty"><span class="big">+</span>No bonus or incentive entries for ${esc(monthLabel(mk))}.</div>`;
+  return `<div class="table-scroll"><table>
+    <thead><tr><th>Worker</th><th>Type</th><th class="num">Amount</th><th>Reason</th><th>Remarks</th><th></th></tr></thead>
+    <tbody>${list.map(b=>{
+      const w = worker(b.workerId);
+      return `<tr><td>${esc(w?w.fullName:'—')}</td><td><span class="badge badge-gold">${esc(b.type)}</span></td><td class="num">${fmtMoney(b.amount)}</td><td>${esc(b.reason||'')}</td><td>${esc(b.remarks||'')}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="deleteBonus('${b.id}')">Remove</button></td></tr>`;
+    }).join('')}</tbody></table></div>`;
+}
+function renderDeductionTable(mk){
+  const list = state.otherDeductions.filter(d=>d.month===mk).sort((a,b)=>(worker(a.workerId)?.fullName||'').localeCompare(worker(b.workerId)?.fullName||''));
+  if(list.length===0) return `<div class="empty"><span class="big">&minus;</span>No other deductions for ${esc(monthLabel(mk))}.</div>`;
+  return `<div class="table-scroll"><table>
+    <thead><tr><th>Worker</th><th>Type</th><th class="num">Amount</th><th>Reason</th><th>Remarks</th><th></th></tr></thead>
+    <tbody>${list.map(d=>{
+      const w = worker(d.workerId);
+      return `<tr><td>${esc(w?w.fullName:'—')}</td><td><span class="badge badge-inactive">${esc(d.type)}</span></td><td class="num">${fmtMoney(d.amount)}</td><td>${esc(d.reason||'')}</td><td>${esc(d.remarks||'')}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="deleteDeduction('${d.id}')">Remove</button></td></tr>`;
+    }).join('')}</tbody></table></div>`;
+}
+function openBonusModal(){
+  if(state.workers.length===0){ alert('Add a worker first.'); return; }
+  openModal(`
+    <div class="modal-back" onclick="if(event.target===this) closeModal()">
+      <div class="modal">
+        <div class="modal-head"><h3>Add bonus / incentive</h3><button class="close-x" onclick="closeModal()">✕</button></div>
+        <form id="bonusForm">
+          <div class="form-grid">
+            <label class="field">Worker<select name="workerId" required>${state.workers.map(w=>`<option value="${esc(w.id)}">${esc(w.fullName)}</option>`).join('')}</select></label>
+            <label class="field">Month<input type="month" name="month" value="${esc(uiState.earnings.month)}" required></label>
+            <label class="field">Type<select name="type"><option>Bonus</option><option>Performance incentive</option><option>Festival bonus</option><option>Special payment</option><option>Other</option></select></label>
+            <label class="field">Amount (${esc(state.settings.currency)})<input type="number" min="0" step="0.01" name="amount" required></label>
+            <label class="field" style="grid-column:1/-1;">Reason<input name="reason"></label>
+            <label class="field" style="grid-column:1/-1;">Remarks<textarea name="remarks" rows="2"></textarea></label>
+          </div>
+          <div class="modal-actions"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Save</button></div>
+        </form>
+      </div>
+    </div>
+  `);
+  document.getElementById('bonusForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const obj = Object.fromEntries(new FormData(e.target).entries());
+    obj.id = uid('bon'); obj.amount = Number(obj.amount||0);
+    state.bonuses.push(obj); saveState(); closeModal(); render();
+  });
+}
+function openDeductionModal(){
+  if(state.workers.length===0){ alert('Add a worker first.'); return; }
+  openModal(`
+    <div class="modal-back" onclick="if(event.target===this) closeModal()">
+      <div class="modal">
+        <div class="modal-head"><h3>Add deduction</h3><button class="close-x" onclick="closeModal()">✕</button></div>
+        <form id="dedForm">
+          <div class="form-grid">
+            <label class="field">Worker<select name="workerId" required>${state.workers.map(w=>`<option value="${esc(w.id)}">${esc(w.fullName)}</option>`).join('')}</select></label>
+            <label class="field">Month<input type="month" name="month" value="${esc(uiState.earnings.month)}" required></label>
+            <label class="field">Type<select name="type"><option>Loan deduction</option><option>Penalty</option><option>Other</option></select></label>
+            <label class="field">Amount (${esc(state.settings.currency)})<input type="number" min="0" step="0.01" name="amount" required></label>
+            <label class="field" style="grid-column:1/-1;">Reason<input name="reason"></label>
+            <label class="field" style="grid-column:1/-1;">Remarks<textarea name="remarks" rows="2"></textarea></label>
+          </div>
+          <div class="modal-actions"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Save</button></div>
+        </form>
+      </div>
+    </div>
+  `);
+  document.getElementById('dedForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const obj = Object.fromEntries(new FormData(e.target).entries());
+    obj.id = uid('ded'); obj.amount = Number(obj.amount||0);
+    state.otherDeductions.push(obj); saveState(); closeModal(); render();
+  });
+}
+function deleteBonus(id){ if(!confirm('Remove this entry?'))return; state.bonuses=state.bonuses.filter(b=>b.id!==id); saveState(); render(); }
+function deleteDeduction(id){ if(!confirm('Remove this entry?'))return; state.otherDeductions=state.otherDeductions.filter(d=>d.id!==id); saveState(); render(); }
+
+/* =========================================================================
+   PAYROLL
+========================================================================= */
+function renderPayroll(){
+  const mk = uiState.payroll.month;
+  const list = activeWorkers();
+  const rows = list.map(w=>{
+    const rec = existingPayrollRecord(w.id, mk);
+    const calc = computePayroll(w.id, mk, uiState.payroll['adv_'+w.id]);
+    return {w, rec, calc};
+  });
+  const anyLocked = rows.some(r=>r.rec);
+  const allLocked = rows.length>0 && rows.every(r=>r.rec);
+  const totals = rows.reduce((t,r)=>({
+    gross:t.gross+r.calc.gross, net:t.net+r.calc.net, adv:t.adv+r.calc.advanceDeduction, other:t.other+r.calc.otherDeduction
+  }), {gross:0,net:0,adv:0,other:0});
+
+  return `
+    <div class="topline">
+      <div><h2>Payroll</h2><div class="desc">Preview each worker's salary, then process to lock the month's rates</div></div>
+      <div class="row-flex">
+        <button class="btn" onclick="exportPayrollCSV()">Export CSV</button>
+        ${!allLocked ? `<button class="btn btn-primary" onclick="processAllPayroll()">Process month</button>` : `<span class="locked-tag">🔒 Month fully processed</span>`}
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">
+        <label class="field">Month<input type="month" id="payrollMonth" value="${esc(mk)}"></label>
+        <div class="hint">Half day = ${state.settings.halfDayValue} × daily rate. Holiday paid: ${state.settings.holidayPaid?'yes':'no'}. Leave paid: ${state.settings.leavePaid?'yes':'no'}.</div>
+      </div>
+
+      ${rows.length===0 ? `<div class="empty"><span class="big">₹</span>No active workers to run payroll for.</div>` : `
+      <div class="table-scroll"><table>
+        <thead><tr>
+          <th>Worker</th><th class="num">Present</th><th class="num">Half</th><th class="num">Daily rate</th>
+          <th class="num">OT hrs</th><th class="num">OT rate</th><th class="num">Regular pay</th><th class="num">OT pay</th>
+          <th class="num">Bonus</th><th class="num">Gross</th><th class="num">Advance ded.</th><th class="num">Other ded.</th>
+          <th class="num">Net salary</th><th>Status</th><th></th>
+        </tr></thead>
+        <tbody>
+          ${rows.map(({w,rec,calc})=>`
+            <tr>
+              <td>${esc(w.fullName)}</td>
+              <td class="num">${calc.counts.P}</td>
+              <td class="num">${calc.counts.HD}</td>
+              <td class="num">${fmtMoney(calc.dailyRate)}</td>
+              <td class="num">${calc.otHours}</td>
+              <td class="num">${fmtMoney(calc.otRate)}</td>
+              <td class="num">${fmtMoney(calc.presentPay+calc.halfDayPay+calc.holidayPay+calc.leavePay)}</td>
+              <td class="num">${fmtMoney(calc.otPay)}</td>
+              <td class="num">${fmtMoney(calc.bonus)}</td>
+              <td class="num">${fmtMoney(calc.gross)}</td>
+              <td class="num">
+                ${rec ? fmtMoney(calc.advanceDeduction) : `<input type="number" min="0" max="${outstandingForWorker(w.id)}" step="0.01" style="width:90px; text-align:right;" data-advinput="${w.id}" value="${calc.advanceDeduction}">`}
+              </td>
+              <td class="num">${fmtMoney(calc.otherDeduction)}</td>
+              <td class="num ${calc.net>=0?'net-pos':'net-neg'}">${fmtMoney(calc.net)}</td>
+              <td>${rec?'<span class="locked-tag">Processed</span>':'<span class="draft-tag">Draft</span>'}</td>
+              <td>
+                <button class="btn btn-ghost btn-sm" onclick="viewPayslip('${w.id}','${mk}')">Payslip</button>
+                ${rec ? `<button class="btn btn-ghost btn-sm" onclick="undoPayroll('${rec.id}')">Undo</button>` : `<button class="btn btn-ghost btn-sm" onclick="processOne('${w.id}')">Process</button>`}
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+        <tfoot>
+          <tr style="font-weight:600; background:var(--accent-soft);">
+            <td colspan="9" style="text-align:right;">Totals</td>
+            <td class="num">${fmtMoney(totals.gross)}</td>
+            <td class="num">${fmtMoney(totals.adv)}</td>
+            <td class="num">${fmtMoney(totals.other)}</td>
+            <td class="num">${fmtMoney(totals.net)}</td>
+            <td colspan="2"></td>
+          </tr>
+        </tfoot>
+      </table></div>`}
+    </div>
+  `;
+}
+function processOne(workerId){
+  const mk = uiState.payroll.month;
+  const input = document.querySelector(`[data-advinput="${workerId}"]`);
+  const advAmount = input ? Number(input.value||0) : undefined;
+  if(advAmount !== undefined && advAmount > outstandingForWorker(workerId) + 0.01){
+    alert('Advance deduction cannot exceed the worker\'s outstanding advance balance.'); return;
+  }
+  processPayroll(workerId, mk, advAmount);
+  render();
+}
+function processAllPayroll(){
+  const mk = uiState.payroll.month;
+  if(!confirm(`Process payroll for all active workers for ${monthLabel(mk)}? Rates and attendance will be locked for this month.`)) return;
+  activeWorkers().forEach(w=>{
+    if(existingPayrollRecord(w.id, mk)) return;
+    const input = document.querySelector(`[data-advinput="${w.id}"]`);
+    const advAmount = input ? Number(input.value||0) : undefined;
+    processPayroll(w.id, mk, advAmount);
+  });
+  render();
+}
+function undoPayroll(recordId){
+  if(!confirm('Undo this processed payroll? The month will return to draft and advance recovery for this month will be reversed.')) return;
+  unprocessPayroll(recordId); render();
+}
+function viewPayslip(workerId, monthKey){
+  const w = worker(workerId);
+  const calc = computePayroll(workerId, monthKey);
+  openModal(`
+    <div class="modal-back" onclick="if(event.target===this) closeModal()">
+      <div class="modal">
+        <div class="modal-head"><h3>Payslip</h3><button class="close-x no-print" onclick="closeModal()">✕</button></div>
+        <div id="payslipPrint">
+          <h4 style="font-size:16px;">${esc(state.settings.companyName)}</h4>
+          <p class="hint" style="margin:2px 0 14px;">${esc(monthLabel(monthKey))} &middot; ${calc.locked?'Processed':'Draft preview'}</p>
+          <table style="margin-bottom:12px;">
+            <tr><td>Worker</td><td class="num">${esc(w.fullName)} (${esc(w.id)})</td></tr>
+            <tr><td>Department</td><td class="num">${esc(w.department||'—')}</td></tr>
+            <tr><td>Daily rate</td><td class="num">${fmtMoney(calc.dailyRate)}</td></tr>
+            <tr><td>OT rate</td><td class="num">${fmtMoney(calc.otRate)}/hr</td></tr>
+          </table>
+          <table>
+            <tr><td>Present days</td><td class="num">${calc.counts.P}</td></tr>
+            <tr><td>Half days</td><td class="num">${calc.counts.HD}</td></tr>
+            <tr><td>Absent days</td><td class="num">${calc.counts.A}</td></tr>
+            <tr><td>Leave days</td><td class="num">${calc.counts.L}</td></tr>
+            <tr><td>Holidays</td><td class="num">${calc.counts.H}</td></tr>
+            <tr><td>Overtime hours</td><td class="num">${calc.otHours}</td></tr>
+          </table>
+          <table style="margin-top:12px;">
+            <tr><td>Present pay</td><td class="num">${fmtMoney(calc.presentPay)}</td></tr>
+            <tr><td>Half day pay</td><td class="num">${fmtMoney(calc.halfDayPay)}</td></tr>
+            ${state.settings.holidayPaid?`<tr><td>Holiday pay</td><td class="num">${fmtMoney(calc.holidayPay)}</td></tr>`:''}
+            ${state.settings.leavePaid?`<tr><td>Leave pay</td><td class="num">${fmtMoney(calc.leavePay)}</td></tr>`:''}
+            <tr><td>Overtime pay</td><td class="num">${fmtMoney(calc.otPay)}</td></tr>
+            <tr><td>Bonus / incentives</td><td class="num">${fmtMoney(calc.bonus)}</td></tr>
+            <tr style="font-weight:600;"><td>Gross earnings</td><td class="num">${fmtMoney(calc.gross)}</td></tr>
+            <tr><td>Advance deduction</td><td class="num">-${fmtMoney(calc.advanceDeduction)}</td></tr>
+            <tr><td>Other deductions</td><td class="num">-${fmtMoney(calc.otherDeduction)}</td></tr>
+            <tr style="font-weight:700; font-size:15px;"><td>Net salary</td><td class="num">${fmtMoney(calc.net)}</td></tr>
+          </table>
+        </div>
+        <div class="modal-actions no-print"><button class="btn" onclick="closeModal()">Close</button><button class="btn btn-primary" onclick="window.print()">Print</button></div>
+      </div>
+    </div>
+  `);
+}
+function exportPayrollCSV(){
+  const mk = uiState.payroll.month;
+  const rows = activeWorkers().map(w=>computePayroll(w.id, mk));
+  const header = ['Worker ID','Name','Present Days','Half Days','Daily Rate','OT Hours','OT Rate','Regular Pay','OT Pay','Bonus','Gross','Advance Deduction','Other Deduction','Net Salary'];
+  const lines = [header.join(',')];
+  activeWorkers().forEach((w,i)=>{
+    const c = rows[i];
+    lines.push([w.id, `"${w.fullName}"`, c.counts.P, c.counts.HD, c.dailyRate, c.otHours, c.otRate,
+      (c.presentPay+c.halfDayPay+c.holidayPay+c.leavePay).toFixed(2), c.otPay.toFixed(2), c.bonus.toFixed(2), c.gross.toFixed(2),
+      c.advanceDeduction.toFixed(2), c.otherDeduction.toFixed(2), c.net.toFixed(2)].join(','));
+  });
+  const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `payroll_${mk}.csv`; a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* =========================================================================
+   SETTINGS
+========================================================================= */
+function renderSettings(){
+  const s = state.settings;
+  return `
+    <div class="topline"><div><h2>Settings</h2><div class="desc">Configure company details and payroll rules</div></div></div>
+    <div class="panel">
+      <div class="panel-title"><h3>Company</h3></div>
+      <div class="form-grid">
+        <label class="field">Company / ledger name<input id="setCompanyName" value="${esc(s.companyName)}"></label>
+        <label class="field">Currency symbol<input id="setCurrency" value="${esc(s.currency)}" maxlength="3"></label>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title"><h3>Payroll rules</h3></div>
+      <div class="form-grid">
+        <label class="field">Half day value (as a fraction of daily rate)<input type="number" id="setHalfDay" min="0" max="1" step="0.05" value="${s.halfDayValue}"></label>
+        <label class="field" style="flex-direction:row; align-items:center; gap:8px; margin-top:18px;"><input type="checkbox" id="setHolidayPaid" ${s.holidayPaid?'checked':''}> Pay full daily rate for Holiday days</label>
+        <label class="field" style="flex-direction:row; align-items:center; gap:8px; margin-top:18px;"><input type="checkbox" id="setLeavePaid" ${s.leavePaid?'checked':''}> Pay full daily rate for Leave days</label>
+      </div>
+      <div class="hint" style="margin-top:10px;">These rules apply going forward. Months already processed keep their locked snapshot regardless of later changes.</div>
+    </div>
+    <div class="panel">
+      <div class="panel-title"><h3>Data</h3></div>
+      <div class="row-flex">
+        <button class="btn" onclick="exportAllData()">Export all data (JSON backup)</button>
+        <button class="btn btn-danger" onclick="wipeAllData()">Erase all data</button>
+      </div>
+      <div class="hint" style="margin-top:8px;">All data is stored only in this browser. Export a backup before clearing browser storage.</div>
+    </div>
+  `;
+}
+function exportAllData(){
+  const blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'payroll_backup_'+todayISO()+'.json'; a.click();
+  URL.revokeObjectURL(url);
+}
+function wipeAllData(){
+  if(!confirm('This will permanently erase all workers, attendance, advances and payroll records in this browser. Continue?')) return;
+  if(!confirm('Are you absolutely sure? This cannot be undone.')) return;
+  state = defaultState();
+  saveState(); render();
+}
+
+/* =========================================================================
+   EVENT WIRING (delegated, re-attached after each render)
+========================================================================= */
+function attachTabEvents(){
+  document.querySelectorAll('.nav button').forEach(b=>b.onclick = ()=>setTab(b.dataset.tab));
+
+  if(currentTab==='workers'){
+    const s = document.getElementById('workerSearch');
+    if(s) s.oninput = (e)=>{ uiState.workers.search = e.target.value; render(); document.getElementById('workerSearch').focus(); document.getElementById('workerSearch').selectionStart = document.getElementById('workerSearch').value.length; };
+  }
+  if(currentTab==='attendance'){
+    const ws = document.getElementById('attWorkerSelect');
+    if(ws) ws.onchange = (e)=>{ uiState.attendance.workerId = e.target.value; render(); };
+    const ms = document.getElementById('attMonthSelect');
+    if(ms) ms.onchange = (e)=>{ uiState.attendance.month = e.target.value; render(); };
+    document.querySelectorAll('.status-pick').forEach(b=>b.onclick = ()=>{ uiState.attendance.status = b.dataset.status; render(); });
+    const oh = document.getElementById('otHoursInput');
+    if(oh) oh.onchange = (e)=>{ const w=worker(uiState.attendance.workerId); getAttendance(w.id, uiState.attendance.month).otHours = Number(e.target.value||0); saveState(); };
+    const mp = document.getElementById('markAllPresent');
+    if(mp) mp.onclick = ()=>{ const w=worker(uiState.attendance.workerId); const att=getAttendance(w.id, uiState.attendance.month); const dim=daysInMonth(uiState.attendance.month); for(let d=1; d<=dim; d++) att.days[d]='P'; saveState(); render(); };
+    const cm = document.getElementById('clearMonth');
+    if(cm) cm.onclick = ()=>{ if(!confirm('Clear all attendance marks for this worker & month?')) return; const w=worker(uiState.attendance.workerId); getAttendance(w.id, uiState.attendance.month).days = {}; saveState(); render(); };
+  }
+  if(currentTab==='advances'){
+    const f = document.getElementById('advWorkerFilter');
+    if(f) f.onchange = (e)=>{ uiState.advances.workerId = e.target.value; render(); };
+  }
+  if(currentTab==='earnings'){
+    const m = document.getElementById('earningsMonth');
+    if(m) m.onchange = (e)=>{ uiState.earnings.month = e.target.value; render(); };
+  }
+  if(currentTab==='payroll'){
+    const m = document.getElementById('payrollMonth');
+    if(m) m.onchange = (e)=>{ uiState.payroll.month = e.target.value; render(); };
+    document.querySelectorAll('[data-advinput]').forEach(inp=>{
+      inp.onchange = ()=>{ /* value read at process time; just re-render net preview */
+        const wid = inp.dataset.advinput;
+        uiState.payroll['adv_'+wid] = Number(inp.value||0);
+        render();
+      };
+    });
+  }
+  if(currentTab==='settings'){
+    const bind = (id, path)=>{ const el=document.getElementById(id); if(!el) return; el.onchange = ()=>{ const val = el.type==='checkbox'?el.checked:(el.type==='number'?Number(el.value):el.value); path(val); saveState(); render(); }; };
+    bind('setCompanyName', v=>state.settings.companyName=v);
+    bind('setCurrency', v=>state.settings.currency=v||'₹');
+    bind('setHalfDay', v=>state.settings.halfDayValue=v);
+    bind('setHolidayPaid', v=>state.settings.holidayPaid=v);
+    bind('setLeavePaid', v=>state.settings.leavePaid=v);
+  }
+}
+
+/* =========================================================================
+   INIT
+========================================================================= */
+loadState();
+render();
+</script>
+</body>
+</html>
